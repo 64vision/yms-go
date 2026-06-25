@@ -1,0 +1,75 @@
+syntax = "proto3";
+package  wallet;
+
+option go_package ="wallet/proto";
+
+service WalletService {
+    rpc OpenAccount(OpenRequest) returns (OpenResponse);
+    rpc UpdateAccount(OpenRequest) returns (OpenResponse);
+    rpc GetAccount(GetAccountRequest) returns (GetAccountResponse);
+    rpc SendTransaction(TransactionRequest) returns (TransactionResponse);
+    rpc CheckAccount(GetAccountRequest) returns (BalanceResponse);
+}
+
+message OpenRequest{
+    int32  account_id = 1;
+    string first_name = 2;
+    string last_name = 3;
+    string email = 4;
+    string mobile_no = 5;
+}
+message OpenResponse{
+    bool status = 1;
+    string remarks = 2;
+    int32  account_id = 3;
+}
+message BalanceResponse{
+    bool status = 1;
+    string remarks = 2;
+    int32  account_id = 3;
+    float balance = 4;
+}
+
+message GetAccountRequest{
+    int32 account_id = 1;
+}
+message GetAccountResponse{
+    int32  id = 1;
+    int32  account_id = 2;
+    string first_name = 3;
+    string last_name = 4;
+    string email = 5;
+    string mobile_no = 6;
+    uint64 balance = 7;
+    string status = 8;
+    string remarks = 9;
+    string created_at = 10;
+    string last_updated = 11;
+}
+message TransactionRequest{
+    int32 account_id = 1;
+    string type = 2;
+    float amount = 3;
+    string description = 4;
+    int32 ref_no = 5;
+    int32 sender_id = 6;
+}
+message TransactionResponse{
+    int32 id = 1;
+    int32 account_id = 2;
+    int32 ref_no = 3;
+    string description = 4;
+    float amount = 5;
+    string type = 6;
+    string status = 7;
+    string remarks = 8;
+    string created_at = 9;
+    uint64 previous_balance = 10;
+    uint64 current_balance = 11;
+    int32 sender_id = 12;
+}
+
+
+
+//Call to generate
+//protoc --go_out=. --go-grpc_out=. wallet.proto

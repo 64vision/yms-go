@@ -1,0 +1,7 @@
+{
+    "endpoint": "https://acct.servehpbr.com",
+    "version": 1,
+    "dismissible": true,
+    "download_url": "https://games-vf.s3.ap-southeast-1.amazonaws.com/blazing.apk"
+ 
+}
