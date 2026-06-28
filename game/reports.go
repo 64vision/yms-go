@@ -5,8 +5,8 @@ import (
 	"strconv"
 	"time"
 
-	"hyperball.com/reports"
-	u "hyperball.com/utils"
+	"gollux/reports"
+	u "gollux/utils"
 )
 
 type PerGame struct {

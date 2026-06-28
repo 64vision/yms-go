@@ -1,10 +1,10 @@
-module hyperball.com/reports
+module gollux/reports
 
 go 1.24.0
 
 require (
 	github.com/go-pg/pg v8.0.7+incompatible
-	hyperball.com/utils v0.0.0-00010101000000-000000000000
+	gollux/utils v0.0.0-00010101000000-000000000000
 )
 
 require (
@@ -16,10 +16,10 @@ require (
 	mellium.im/sasl v0.3.2 // indirect
 )
 
-replace hyperball.com/game => ../game
+replace gollux/game => ../game
 
-replace hyperball.com/utils => ../utils
+replace gollux/utils => ../utils
 
-replace hyperball.com/account => ../account
+replace gollux/account => ../account
 
-replace hyperball.com/sms => ../sms
+replace gollux/sms => ../sms

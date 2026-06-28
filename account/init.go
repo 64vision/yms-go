@@ -30,10 +30,10 @@ func OpenDB() {
 	fmt.Println("----------------------\n Prod:  Initializing player account database...")
 	os.Setenv("TZ", "Asia/Manila")
 	DBM = pg.Connect(&pg.Options{
-		Addr:     "quantum-db.c9qcwnngsyds.ap-southeast-1.rds.amazonaws.com:5432",
+		Addr:     "",
 		User:     "postgres",
 		Password: "64vision123!",
-		Database: "prod_accounts_db",
+		Database: "yms_db",
 	})
 	var n int
 	_, err := DBM.QueryOne(pg.Scan(&n), "SELECT 1")

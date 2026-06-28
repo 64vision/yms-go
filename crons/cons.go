@@ -3,8 +3,9 @@ package main
 import (
 	"fmt"
 
+	"gollux/account"
+
 	"github.com/robfig/cron"
-	"hyperball.com/account"
 )
 
 func settlement() {

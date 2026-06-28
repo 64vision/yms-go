@@ -1,4 +1,4 @@
-module hyperball.com/wallet/proto
+module gollux/wallet/proto
 
 go 1.24.0
 

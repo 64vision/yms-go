@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"time"
 
-	u "hyperball.com/utils"
+	u "gollux/utils"
 )
 
 type Account struct {

@@ -7,9 +7,10 @@ import (
 	"net"
 	"os"
 
+	pb "gollux/wallet/proto"
+
 	"github.com/go-pg/pg"
 	"google.golang.org/grpc"
-	pb "hyperball.com/wallet/proto"
 )
 
 var DBM *pg.DB

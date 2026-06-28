@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"time"
 
-	u "hyperball.com/utils"
+	u "gollux/utils"
 )
 
 type PerGame struct {

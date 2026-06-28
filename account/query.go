@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	u "hyperball.com/utils"
+	u "gollux/utils"
 )
 
 type Query struct {

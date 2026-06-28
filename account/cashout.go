@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"time"
 
-	"hyperball.com/sms"
-	u "hyperball.com/utils"
+	"gollux/sms"
+	u "gollux/utils"
 )
 
 type Cashout struct {

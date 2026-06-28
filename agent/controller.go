@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"hyperball.com/account"
-	u "hyperball.com/utils"
+	"gollux/account"
+	u "gollux/utils"
 )
 
 type QryParam struct {

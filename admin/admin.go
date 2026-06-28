@@ -7,13 +7,14 @@ import (
 	"net/http"
 	"time"
 
+	"gollux/account"
+	"gollux/auth"
+	"gollux/game"
+	"gollux/reports"
+	"gollux/tools"
+
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
-	"hyperball.com/account"
-	"hyperball.com/auth"
-	"hyperball.com/game"
-	"hyperball.com/reports"
-	"hyperball.com/tools"
 )
 
 const (
@@ -24,21 +25,9 @@ func main() {
 	fmt.Println("Starting administration")
 	router := mux.NewRouter()
 	router.HandleFunc("/admin/login", account.AdminLogin).Methods("POST")
-	// races
-	router.HandleFunc("/race/open", game.OpenRace).Methods("POST")
-	router.HandleFunc("/race/getopen", game.GetOpenRace).Methods("GET")
-	router.HandleFunc("/race/update", game.UpdateRace).Methods("POST")
-	router.HandleFunc("/race/key_in", game.KeyInRace).Methods("POST")
-	router.HandleFunc("/race/list", game.GetRaceList).Methods("POST")
-	//vmix pull
-	router.HandleFunc("/race/vmix", game.GetResultVmix).Methods("GET")              //results pull
-	router.HandleFunc("/race/vmix_odds", game.GetOddsVmix).Methods("GET")           // odds pull
-	router.HandleFunc("/race/vmix_lap", game.GetLapVmix).Methods("GET")             //race meta pull
-	router.HandleFunc("/race/vmix_recent", game.GetRecentResultVmix).Methods("GET") //racerecent result
-	router.HandleFunc("/race/vmix_prizes", game.GetPrizesVmix).Methods("GET")
 
 	//
-	router.HandleFunc("/race/update_lap", game.UpdateRaceLap).Methods("POST")
+
 	router.HandleFunc("/admin/qry", account.CustomQry).Methods("POST")
 	router.HandleFunc("/settings/get", game.GetSettings).Methods("GET")
 	router.HandleFunc("/report/qry", reports.GetReports).Methods("POST")

@@ -4,7 +4,7 @@ import (
 	"strconv"
 	"strings"
 
-	u "hyperball.com/utils"
+	u "gollux/utils"
 )
 
 type Combination struct {

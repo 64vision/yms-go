@@ -5,11 +5,11 @@ go 1.24.0
 require (
 	github.com/gorilla/mux v1.8.1
 	github.com/rs/cors v1.11.1
-	hyperball.com/account v0.0.0-00010101000000-000000000000
-	hyperball.com/auth v0.0.0-00010101000000-000000000000
-	hyperball.com/game v0.0.0-00010101000000-000000000000
-	hyperball.com/reports v0.0.0-00010101000000-000000000000
-	hyperball.com/tools v0.0.0-00010101000000-000000000000
+	gollux/account v0.0.0-00010101000000-000000000000
+	gollux/auth v0.0.0-00010101000000-000000000000
+	gollux/game v0.0.0-00010101000000-000000000000
+	gollux/reports v0.0.0-00010101000000-000000000000
+	gollux/tools v0.0.0-00010101000000-000000000000
 )
 
 require (
@@ -21,21 +21,21 @@ require (
 	github.com/kr/pretty v0.3.1 // indirect
 	github.com/nxadm/tail v1.4.11 // indirect
 	golang.org/x/crypto v0.31.0 // indirect
-	hyperball.com/sms v0.0.0-00010101000000-000000000000 // indirect
-	hyperball.com/utils v0.0.0-00010101000000-000000000000 // indirect
+	gollux/sms v0.0.0-00010101000000-000000000000 // indirect
+	gollux/utils v0.0.0-00010101000000-000000000000 // indirect
 	mellium.im/sasl v0.3.2 // indirect
 )
 
-replace hyperball.com/auth => ../auth
+replace gollux/auth => ../auth
 
-replace hyperball.com/account => ../account
+replace gollux/account => ../account
 
-replace hyperball.com/utils => ../utils
+replace gollux/utils => ../utils
 
-replace hyperball.com/game => ../game
+replace gollux/game => ../game
 
-replace hyperball.com/reports => ../reports
+replace gollux/reports => ../reports
 
-replace hyperball.com/sms => ../sms
+replace gollux/sms => ../sms
 
-replace hyperball.com/tools => ../tools
+replace gollux/tools => ../tools

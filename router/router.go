@@ -10,9 +10,8 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
 
-	"hyperball.com/account"
-	"hyperball.com/auth"
-	"hyperball.com/game"
+	"gollux/account"
+	"gollux/auth"
 )
 
 const (
@@ -38,15 +37,6 @@ func main() {
 	router.HandleFunc("/credits/get_cashout", account.GetCashout).Methods("POST")
 	router.HandleFunc("/credits/callback", account.Callback).Methods("POST")
 	router.HandleFunc("/credits/maya_callback", account.MayaCallback).Methods("POST")
-
-	//bets
-	router.HandleFunc("/bet/place", game.PlaceBet).Methods("POST")
-	router.HandleFunc("/bet/hyperwin", game.PlaceHyperWinBet).Methods("POST")
-	router.HandleFunc("/bet/get_hyper", game.GetHyperAllNum).Methods("GET")
-	router.HandleFunc("/bet/wager", game.GetWager).Methods("POST")
-	router.HandleFunc("/settings/get", game.StreamSettings).Methods("GET")
-	router.HandleFunc("/race/getopen", game.GetOpenRace).Methods("GET")
-	router.HandleFunc("/bet/history", game.GetBetLogs).Methods("POST")
 
 	router.Use(auth.JwtAuthentication)
 

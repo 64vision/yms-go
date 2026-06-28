@@ -3,8 +3,9 @@ package account
 import (
 	"fmt"
 
+	u "gollux/utils"
+
 	jwt "github.com/dgrijalva/jwt-go"
-	u "hyperball.com/utils"
 )
 
 func (login *Administrator) Login() map[string]interface{} {

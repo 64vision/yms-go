@@ -6,9 +6,9 @@ import (
 	"net/http"
 	"time"
 
-	"hyperball.com/account"
-	"hyperball.com/sms"
-	u "hyperball.com/utils"
+	"gollux/account"
+	"gollux/sms"
+	u "gollux/utils"
 )
 
 type Message struct {

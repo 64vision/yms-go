@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"time"
 
-	"hyperball.com/sms"
-	u "hyperball.com/utils"
+	"gollux/sms"
+	u "gollux/utils"
 )
 
 type Race struct {

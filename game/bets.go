@@ -6,8 +6,8 @@ import (
 	"strings"
 	"time"
 
-	"hyperball.com/account"
-	u "hyperball.com/utils"
+	"gollux/account"
+	u "gollux/utils"
 )
 
 type Bet struct {

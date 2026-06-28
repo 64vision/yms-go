@@ -7,10 +7,11 @@ import (
 	"net/http"
 	"time"
 
+	"gollux/account"
+	"gollux/auth"
+
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
-	"hyperball.com/account"
-	"hyperball.com/auth"
 )
 
 const (

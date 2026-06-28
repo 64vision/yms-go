@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"strings"
 
-	"hyperball.com/sms"
-	u "hyperball.com/utils"
+	"gollux/sms"
+	u "gollux/utils"
 )
 
 func AddRequest(w http.ResponseWriter, r *http.Request) {

@@ -1,14 +1,14 @@
-module hyperball.com/wallet
+module gollux/wallet
 
 go 1.24.0
 
-replace hyperball.com/utils => ../utils
+replace gollux/utils => ../utils
 
 require (
 	github.com/go-pg/pg v8.0.7+incompatible
 	google.golang.org/grpc v1.70.0
-	hyperball.com/utils v0.0.0-00010101000000-000000000000
-	hyperball.com/wallet/proto v0.0.0-00010101000000-000000000000
+	gollux/utils v0.0.0-00010101000000-000000000000
+	gollux/wallet/proto v0.0.0-00010101000000-000000000000
 )
 
 require (
@@ -27,4 +27,4 @@ require (
 
 replace wallet/proto => ../wallet/wallet/proto
 
-replace hyperball.com/wallet/proto => ../wallet/wallet/proto
+replace gollux/wallet/proto => ../wallet/wallet/proto

@@ -1,6 +1,6 @@
 package game
 
-import u "hyperball.com/utils"
+import u "gollux/utils"
 
 type Setting struct {
 	ID          int    `json:"id"`

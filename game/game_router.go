@@ -7,8 +7,8 @@ import (
 	"strconv"
 	"strings"
 
-	"hyperball.com/account"
-	u "hyperball.com/utils"
+	"gollux/account"
+	u "gollux/utils"
 )
 
 func GetSettings(w http.ResponseWriter, r *http.Request) {

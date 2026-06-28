@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	u "hyperball.com/utils"
+	u "gollux/utils"
 )
 
 type AccountSettlement struct {

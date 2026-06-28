@@ -1,3 +1,3 @@
-module hyperball.com/utils
+module gollux/utils
 
 go 1.24.0

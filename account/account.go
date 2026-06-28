@@ -4,9 +4,10 @@ import (
 	"fmt"
 	"time"
 
+	"gollux/sms"
+	u "gollux/utils"
+
 	jwt "github.com/dgrijalva/jwt-go"
-	"hyperball.com/sms"
-	u "hyperball.com/utils"
 )
 
 type Token struct {

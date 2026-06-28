@@ -7,8 +7,9 @@ import (
 	"strings"
 	"time"
 
+	u "gollux/utils"
+
 	jwt "github.com/dgrijalva/jwt-go"
-	u "hyperball.com/utils"
 )
 
 type Token struct {

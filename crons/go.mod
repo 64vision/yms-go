@@ -1,16 +1,16 @@
-module hyperball.com/crons
+module gollux/crons
 
 go 1.24.0
 
-replace hyperball.com/account => ../account
+replace gollux/account => ../account
 
-replace hyperball.com/utils => ../utils
+replace gollux/utils => ../utils
 
-replace hyperball.com/sms => ../sms
+replace gollux/sms => ../sms
 
 require (
 	github.com/robfig/cron v1.2.0
-	hyperball.com/account v0.0.0-00010101000000-000000000000
+	gollux/account v0.0.0-00010101000000-000000000000
 )
 
 require (
@@ -22,7 +22,7 @@ require (
 	github.com/nxadm/tail v1.4.11 // indirect
 	golang.org/x/crypto v0.31.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	hyperball.com/sms v0.0.0-00010101000000-000000000000 // indirect
-	hyperball.com/utils v0.0.0-00010101000000-000000000000 // indirect
+	gollux/sms v0.0.0-00010101000000-000000000000 // indirect
+	gollux/utils v0.0.0-00010101000000-000000000000 // indirect
 	mellium.im/sasl v0.3.2 // indirect
 )

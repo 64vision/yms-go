@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"hyperball.com/sms"
+	"gollux/sms"
 )
 
 func main() {

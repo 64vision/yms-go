@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strconv"
 
-	u "hyperball.com/utils"
+	u "gollux/utils"
 )
 
 type Odds struct {

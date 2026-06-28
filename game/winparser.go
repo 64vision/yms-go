@@ -5,8 +5,8 @@ import (
 	"strconv"
 	"strings"
 
-	"hyperball.com/account"
-	"hyperball.com/sms"
+	"gollux/account"
+	"gollux/sms"
 )
 
 func (race *Race) ParseWinner() {

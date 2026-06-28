@@ -5,8 +5,9 @@ import (
 	"strconv"
 	"strings"
 
+	u "gollux/utils"
+
 	"github.com/dustin/go-humanize"
-	u "hyperball.com/utils"
 )
 
 type Rank struct {
