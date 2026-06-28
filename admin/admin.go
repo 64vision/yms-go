@@ -9,9 +9,6 @@ import (
 
 	"gollux/account"
 	"gollux/auth"
-	"gollux/game"
-	"gollux/reports"
-	"gollux/tools"
 
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
@@ -29,17 +26,15 @@ func main() {
 	//
 
 	router.HandleFunc("/admin/qry", account.CustomQry).Methods("POST")
-	router.HandleFunc("/settings/get", game.GetSettings).Methods("GET")
-	router.HandleFunc("/report/qry", reports.GetReports).Methods("POST")
-	router.HandleFunc("/admin/qry_bets", game.QueryBets).Methods("POST")
+
 	router.HandleFunc("/admin/player_stats", account.PlayerStats).Methods("GET")
 	router.HandleFunc("/admin/settlements", account.GetSettlements).Methods("POST")
 	router.HandleFunc("/admin/acct_settlement", account.GetAccountSettlement).Methods("POST")
 	router.HandleFunc("/admin/update_settlement", account.UpdateSettlement).Methods("POST")
 	router.HandleFunc("/admin/update_cashout", account.UpdateCashout).Methods("POST")
 	router.HandleFunc("/admin/player_location", account.GetPlayersLocation).Methods("GET")
-	router.HandleFunc("/send/message", tools.SendMessage).Methods("POST")
-	router.HandleFunc("/message/list", tools.ListMessages).Methods("GET")
+	//router.HandleFunc("/send/message", tools.SendMessage).Methods("POST")
+	//router.HandleFunc("/message/list", tools.ListMessages).Methods("GET")
 
 	//Credits path
 	router.HandleFunc("/credits/topup", account.AddRequest).Methods("POST")

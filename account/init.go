@@ -31,8 +31,8 @@ func OpenDB() {
 	os.Setenv("TZ", "Asia/Manila")
 	DBM = pg.Connect(&pg.Options{
 		Addr:     "",
-		User:     "postgres",
-		Password: "64vision123!",
+		User:     "",
+		Password: "",
 		Database: "yms_db",
 	})
 	var n int
