@@ -8,7 +8,7 @@ import (
 
 func main() {
 	fmt.Println("Test")
-	sms.Send("09156033392", "Test message from Hyperball. Please ignore.")
+	sms.Send("***", "Test message from . Please ignore.")
 }
 
 //09317143427
