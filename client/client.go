@@ -51,7 +51,6 @@ func main() {
 	handler = c.Handler(handler)
 	rand.Seed(time.Now().UnixNano())
 
-	//go BuyingTicker()
 	/*--------------------------------------------------
 		Run Server
 	-----------------------------------------------------*/

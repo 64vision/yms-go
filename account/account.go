@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"gollux/sms"
+	"gollux/email"
 	u "gollux/utils"
 
 	jwt "github.com/dgrijalva/jwt-go"
@@ -26,7 +26,6 @@ type Account struct {
 	Password        string        `json:"password"`
 	CreatedAt       time.Time     `json:"created_at"`
 	Level           int           `json:"level"`
-	Address         interface{}   `json:"address"`
 	Bank            Bank          `json:"bank"`
 	UpdatedAt       time.Time     `json:"updated_at"`
 	DeletedAt       *time.Time    `json:"deleted_at"`
@@ -43,6 +42,9 @@ type Account struct {
 	Upline          int           `json:"upline"`
 	SubUpline       int           `json:"sub_upline"`
 	DirectUpline    int           `json:"direct_upline"`
+	CompanyName     string        `json:"company_name"`
+	CompanyAddress  string        `json:"company_address"`
+	CompanyType     string        `json:"company_type"`
 }
 
 type Registration struct {
@@ -217,7 +219,7 @@ func (acct *Account) Validate() (map[string]interface{}, bool) {
 		return u.Message(false, "Failed"), false
 	}
 	if p.ID != 0 {
-		return u.Message(false, "Mobile number already used."), false
+		return u.Message(false, "Email already used."), false
 	}
 	// _, err = DBM.Query(&p, `SELECT * FROM accounts where email=?`, acct.Email)
 	// if err != nil {
@@ -240,106 +242,114 @@ func (acct *Account) Validate() (map[string]interface{}, bool) {
 	return u.Message(false, "Requirement passed"), true
 }
 
-func (reg *Registration) Add() map[string]interface{} {
-	var acct Account
+func (reg *Account) Add() map[string]interface{} {
+	//	var acct Account
 	fmt.Println("create account!")
 	var verType string
 
-	if reg.Type == "mobile" {
-		acct.Username = reg.Value
-		acct.MobileNo = reg.Value
-		verType = "Mobile"
-		if !u.IsValidPHMobileNumber(acct.MobileNo) {
+	if reg.MobileNo == "" {
+		if !u.IsValidPHMobileNumber(reg.MobileNo) {
 			return u.Message(false, "Invalid Mobile number!")
 		}
-	} else if reg.Type == "email" {
-		acct.Username = reg.Value
-		acct.Email = reg.Value
-		acct.MobileNo = reg.MobileNo
-		verType = "Email"
-	} else {
-		return u.Message(true, "Lacking Type parameter")
+		return u.Message(true, "Lacking Mobile No. parameter")
 	}
+	if reg.Email == "" {
+		return u.Message(true, "Lacking Email parameter")
+	}
+
 	if reg.FirstName == "" {
 		return u.Message(true, "Lacking FirstName parameter")
 	}
 	if reg.LastName == "" {
 		return u.Message(true, "Lacking LastName parameter")
 	}
-	if reg.BirthDate == "" {
-		return u.Message(true, "Lacking BirthDate parameter")
+	if reg.CompanyName == "" {
+		return u.Message(true, "Lacking Company Name parameter")
 	}
+	if reg.CompanyAddress == "" {
+		return u.Message(true, "Lacking Company Address parameter")
+	}
+	// if reg.BirthDate == "" {
+	// 	return u.Message(true, "Lacking BirthDate parameter")
+	// }
 	if reg.Password == "" {
 		return u.Message(true, "Lacking Password parameter")
 	}
-	if resp, ok := acct.Validate(); !ok {
+	if resp, ok := reg.Validate(); !ok {
 		return resp
 	}
-	age, err := CalculateAge(reg.BirthDate)
-	if err != nil {
-		return u.Message(false, err.Error())
-	} else {
-		if age < 18 {
-			return u.Message(false, "To play you must be 18+ years old")
-		}
-	}
-	if reg.Referral != "" {
-		agent, _ := GetAccountByReferral(reg.Referral) // player as an agent
+	// age, err := CalculateAge(reg.BirthDate)
+	// if err != nil {
+	// 	return u.Message(false, err.Error())
+	// } else {
+	// 	if age < 18 {
+	// 		return u.Message(false, "To play you must be 18+ years old")
+	// 	}
+	// }
+	// if reg.Referral != "" {
+	// 	agent, _ := GetAccountByReferral(reg.Referral) // player as an agent
 
-		if agent.ID != 0 {
-			// if agent.Level == 2 {
-			// 	acct.SubAgent = agent.ID
-			// 	acct.Agent = agent.Agent
-			// } else {
-			// 	acct.Agent = agent.ID
-			// }
-			acct.DirectUpline = agent.ID
-			acct.SubUpline = agent.DirectUpline
-			acct.Upline = agent.SubUpline
-		} else {
-			return u.Message(false, "Invalid referral code!")
-		}
-	} else {
-		acct.Agent = 801500000
-		acct.DirectUpline = acct.Agent
-		acct.SubUpline = acct.Agent
-		acct.Upline = acct.Agent
-	}
+	// 	if agent.ID != 0 {
+	// 		// if agent.Level == 2 {
+	// 		// 	acct.SubAgent = agent.ID
+	// 		// 	acct.Agent = agent.Agent
+	// 		// } else {
+	// 		// 	acct.Agent = agent.ID
+	// 		// }
+	// 		acct.DirectUpline = agent.ID
+	// 		acct.SubUpline = agent.DirectUpline
+	// 		acct.Upline = agent.SubUpline
+	// 	} else {
+	// 		return u.Message(false, "Invalid referral code!")
+	// 	}
+	// } else {
+	// 	acct.Agent = 801500000
+	// 	acct.DirectUpline = acct.Agent
+	// 	acct.SubUpline = acct.Agent
+	// 	acct.Upline = acct.Agent
+	// }
 
-	acct.FirstName = reg.FirstName
-	acct.LastName = reg.LastName
-	acct.Password = u.Md5hash(reg.Password)
-	acct.BirthDate = reg.BirthDate
+	// acct.FirstName = reg.FirstName
+	// acct.LastName = reg.LastName
+	// acct.Password = u.Md5hash(reg.Password)
+	// acct.BirthDate = reg.BirthDate
 
-	code := u.GenNumCode(4)
-	acct.Code = code
-	acct.CreatedAt = time.Now()
-	acct.UpdatedAt = time.Now()
-	acct.Level = 3
-	acct.Referral = u.GenCharCode(6)
-	acct.Status = "Active"
-	acct.Remarks = "For Verification"
-	smsmsg := "Your verification code is " + code + ". Enter this code to verify your account."
-	sms.Send(acct.MobileNo, smsmsg)
+	code := u.GenNumCode(6)
+	reg.Code = code
+	reg.CreatedAt = time.Now()
+	reg.UpdatedAt = time.Now()
+	// acct.Level = 3
+	// acct.Referral = u.GenCharCode(6)
+	reg.Status = "Active"
+	reg.Remarks = "For Verification"
+	// smsmsg := "Your verification code is " + code + ". Enter this code to verify your account."
+	// sms.Send(acct.MobileNo, smsmsg)
 
-	_, errdb := DBM.Model(&acct).Insert()
+	_, errdb := DBM.Model(reg).Insert()
 	if errdb != nil {
 		panic(errdb)
 		return u.Message(false, "Failed to create account, connection error")
 	}
 
-	fmt.Println("Type:", verType)
+	reg.SendVerificationEmail(reg.Email, code)
 
-	response := u.Message(true, "Account has been created")
+	response := u.Message(true, "Account has been registered successfully. Please check your email for verification code.")
 	response["account"] = map[string]interface{}{
-		"username":   acct.Username,
-		"email":      acct.Email,
-		"mobile_no":  acct.MobileNo,
-		"created_at": acct.CreatedAt,
-		"status":     acct.Status,
-		"remarks":    acct.Remarks,
+		"username":   reg.Username,
+		"email":      reg.Email,
+		"mobile_no":  reg.MobileNo,
+		"created_at": reg.CreatedAt,
+		"status":     reg.Status,
+		"remarks":    reg.Remarks,
 	}
 	return response
+}
+
+func (acct *Account) SendVerificationEmail(to_email string, code string) {
+	body := "<p>Hi!,</p><p>Thank you for using ZERA Suite Yard Booking. Here is your verification code.</p>" +
+		"<p style='padding: 15px;  color: #000000; font-weight: bold; font-sise: 28px; margin-bottom: 20px; margin-top: 20px; margin-left: 50px;'><b> Verification Code: " + code + "</b><p>" +
+		"<p style='color: #999; margin-top: 50px;'>Thank you!<br /> ZERA Suite Team<p>"
+	email.Send("Account Verification", body, to_email, "no-reply@zerasuite.com", "ZERA Suite")
 }
 func CalculateAge(birthdateStr string) (int, error) {
 	// Define the date format (adjust if needed)
