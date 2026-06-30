@@ -201,7 +201,7 @@ func (verify *VerifyReq) Verify() map[string]interface{} {
 		if p.Remarks != "For Verification" {
 			return u.Message(false, "This account is already verified.")
 		}
-		_, err = DBM.Exec(`UPDATE accounts SET remarks=? where id=? `, "Verified", p.ID)
+		_, err = DBM.Exec(`UPDATE accounts SET remarks=?, status=? where id=? `, "Verified", "Verified", p.ID)
 		if err != nil {
 			panic(err)
 			return u.Message(false, "Failed in verification update!")
@@ -245,7 +245,6 @@ func (acct *Account) Validate() (map[string]interface{}, bool) {
 func (reg *Account) Add() map[string]interface{} {
 	//	var acct Account
 	fmt.Println("create account!")
-	var verType string
 
 	if reg.MobileNo == "" {
 		if !u.IsValidPHMobileNumber(reg.MobileNo) {
@@ -311,7 +310,7 @@ func (reg *Account) Add() map[string]interface{} {
 
 	// acct.FirstName = reg.FirstName
 	// acct.LastName = reg.LastName
-	// acct.Password = u.Md5hash(reg.Password)
+	reg.Password = u.Md5hash(reg.Password)
 	// acct.BirthDate = reg.BirthDate
 
 	code := u.GenNumCode(6)
@@ -320,7 +319,7 @@ func (reg *Account) Add() map[string]interface{} {
 	reg.UpdatedAt = time.Now()
 	// acct.Level = 3
 	// acct.Referral = u.GenCharCode(6)
-	reg.Status = "Active"
+	reg.Status = "Not Verified"
 	reg.Remarks = "For Verification"
 	// smsmsg := "Your verification code is " + code + ". Enter this code to verify your account."
 	// sms.Send(acct.MobileNo, smsmsg)
@@ -351,6 +350,14 @@ func (acct *Account) SendVerificationEmail(to_email string, code string) {
 		"<p style='color: #999; margin-top: 50px;'>Thank you!<br /> ZERA Suite Team<p>"
 	email.Send("Account Verification", body, to_email, "no-reply@zerasuite.com", "ZERA Suite")
 }
+
+func (acct *Account) SendTempPassword(to_email string, password string) {
+	body := "<p>Hi!,</p><p>Thank you for using ZERA Suite Yard Booking. Here is your temporary password.</p>" +
+		"<p style='padding: 15px;  color: #000000; font-weight: bold; font-sise: 28px; margin-bottom: 20px; margin-top: 20px; margin-left: 50px;'><b> Temporary Password: " + password + "</b><p>" +
+		"<p style='color: #999; margin-top: 50px;'>Thank you!<br /> ZERA Suite Team<p>"
+	email.Send("ZERA Suite - Temporary Password", body, to_email, "no-reply@zerasuite.com", "ZERA Suite")
+}
+
 func CalculateAge(birthdateStr string) (int, error) {
 	// Define the date format (adjust if needed)
 	layout := "2006-01-02" // YYYY-MM-DD format
@@ -397,6 +404,17 @@ func GetAccountByID(id int) (*Account, error) {
 func GetAccountByMobile(mobile string) (*Account, error) {
 	var account Account
 	_, err := DBM.Query(&account, `SELECT * FROM accounts where mobile_no=?`, mobile)
+	if err != nil {
+		//panic(err)
+		return &account, err
+	}
+
+	return &account, nil
+}
+
+func GetAccountByEmail(email string) (*Account, error) {
+	var account Account
+	_, err := DBM.Query(&account, `SELECT * FROM accounts where email=?`, email)
 	if err != nil {
 		//panic(err)
 		return &account, err

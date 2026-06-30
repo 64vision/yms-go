@@ -194,7 +194,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 	u.Respond(w, resp)
 }
 
-func ForgotCode(w http.ResponseWriter, r *http.Request) {
+func ForgotPassword(w http.ResponseWriter, r *http.Request) {
 	(w).Header().Set("Access-Control-Allow-Origin", "*")
 	acct := &Account{}
 	err := json.NewDecoder(r.Body).Decode(acct) //decode the request body into struct and failed if any error occur
@@ -203,28 +203,25 @@ func ForgotCode(w http.ResponseWriter, r *http.Request) {
 		u.Respond(w, u.Message(false, "Invalid request"))
 		return
 	}
-	if !u.IsValidPHMobileNumber(acct.MobileNo) {
-		u.Message(false, "Invalid Mobile number!")
-		return
-	}
-	account, _ := GetAccountByMobile(acct.MobileNo)
+
+	fmt.Println(acct.Email)
+	account, _ := GetAccountByEmail(acct.Email)
 	if account.ID == 0 {
-		u.Message(false, "Mobile number not found!!")
+
+		resp := u.Message(false, "This email is not registered with us!")
+		u.Respond(w, resp)
+
 		return
 	}
-	code := u.GenNumCode(4)
+	code := u.GenNumCode(8)
 	_hash := u.Md5hash(code)
 	var qry Query
 	qry.Table = "accounts"
-	qry.Query = "update accounts set password='" + _hash + "' where mobile_no='" + acct.MobileNo + "'"
+	qry.Query = "update accounts set password='" + _hash + "' where email='" + acct.Email + "'"
 	qry.AccountUpdate()
-	smsmsg := "Your temporary password: " + code + ". Please change your password once you logged in."
-	send, resmsg := sms.Send(acct.MobileNo, smsmsg)
-	if !send {
-		u.Respond(w, u.Message(false, resmsg))
-		return
-	}
-	resp := u.Message(true, "Sent!")
+	acct.SendTempPassword(acct.Email, code)
+
+	resp := u.Message(true, "Temporary password sent to your email!")
 	u.Respond(w, resp)
 }
 func ResendCode(w http.ResponseWriter, r *http.Request) {

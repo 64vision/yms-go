@@ -28,7 +28,7 @@ func main() {
 	router.HandleFunc("/account/transactions", account.GetTransactionsHistory).Methods("POST")
 	router.HandleFunc("/account/get", account.GetAccount).Methods("POST")
 	router.HandleFunc("/account/resendcode", account.ResendCode).Methods("POST")
-	router.HandleFunc("/account/forgot", account.ForgotCode).Methods("POST")
+	router.HandleFunc("/account/forgot", account.ForgotPassword).Methods("POST")
 	router.HandleFunc("/account/balance", account.BalanceInquire).Methods("POST")
 	router.HandleFunc("/account/qry", account.PlayerCustomQry).Methods("POST")
 	router.HandleFunc("/credits/buy", account.DoBuyCredits).Methods("POST")

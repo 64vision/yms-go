@@ -7,7 +7,6 @@ require (
 	github.com/rs/cors v1.11.1
 	gollux/account v0.0.0-00010101000000-000000000000
 	gollux/auth v0.0.0-00010101000000-000000000000
-	gollux/email v0.0.0-00010101000000-000000000000
 )
 
 require (
@@ -20,6 +19,7 @@ require (
 	github.com/kr/pretty v0.3.1 // indirect
 	github.com/nxadm/tail v1.4.11 // indirect
 	golang.org/x/crypto v0.31.0 // indirect
+	gollux/email v0.0.0-00010101000000-000000000000 // indirect
 	gollux/sms v0.0.0-00010101000000-000000000000 // indirect
 	gollux/utils v0.0.0-00010101000000-000000000000 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
