@@ -84,12 +84,16 @@ type Address struct {
 }
 
 type Administrator struct {
-	ID       int    `json:"id"`
-	Username string `json:"username"`
-	Fullname string `json:"fullname"`
-	Password string `json:"password"`
-	Role     string `json:"role"`
-	Status   string `json:"status"`
+	ID        int       `json:"id"`
+	Username  string    `json:"username"`
+	Fullname  string    `json:"fullname"`
+	Password  string    `json:"password"`
+	Role      string    `json:"role"`
+	Status    string    `json:"status"`
+	CreatedAt time.Time `json:"created_at"`
+	MobileNo  string    `json:"mobile_no"`
+	Email     string    `json:"email"`
+	Company   string    `json:"company"`
 }
 
 func (login *LogRequest) Login() map[string]interface{} {

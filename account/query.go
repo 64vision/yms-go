@@ -82,7 +82,7 @@ func (qry *Query) AccountUpdate() map[string]interface{} {
 	if errdb != nil {
 		return u.Message(false, errdb.Error())
 	}
-	fmt.Println(res.RowsAffected())
+	fmt.Println(res.RowsReturned())
 	if res.RowsAffected() == 0 {
 		return u.Message(false, "No rows affected!")
 	}
