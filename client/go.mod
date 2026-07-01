@@ -35,3 +35,5 @@ replace gollux/utils => ../utils
 replace gollux/sms => ../sms
 
 replace gollux/email => ../email
+
+replace zerasuite/shippinglines => ../shipping

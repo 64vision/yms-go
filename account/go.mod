@@ -9,6 +9,7 @@ require (
 	github.com/go-pg/pg v8.0.7+incompatible
 	gollux/sms v0.0.0-00010101000000-000000000000
 	gollux/utils v0.0.0-00010101000000-000000000000
+	zerasuite/shippinglines v0.0.0-00010101000000-000000000000
 	zerasuite/yards v0.0.0-00010101000000-000000000000
 )
 
@@ -28,3 +29,5 @@ replace gollux/game => ../game
 replace gollux/reports => ../reports
 
 replace zerasuite/yards => ../yards
+
+replace zerasuite/shippinglines => ../shippinglines

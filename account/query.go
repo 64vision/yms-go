@@ -5,6 +5,7 @@ import (
 	"time"
 
 	u "gollux/utils"
+	"zerasuite/shippinglines"
 	"zerasuite/yards"
 )
 
@@ -45,6 +46,7 @@ func (qry *Query) CustomQry() map[string]interface{} {
 	var admins []Administrator
 	var requests []Request
 	var yards []yards.Yard
+	var shippinglines []shippinglines.ShippingLine
 	var errdb error
 	var response map[string]interface{}
 	fmt.Println(qry.Query)
@@ -58,6 +60,8 @@ func (qry *Query) CustomQry() map[string]interface{} {
 		_, errdb = DBM.Query(&requests, qry.Query)
 	} else if qry.Table == "yards" {
 		_, errdb = DBM.Query(&yards, qry.Query)
+	} else if qry.Table == "shippinglines" {
+		_, errdb = DBM.Query(&shippinglines, qry.Query)
 	} else {
 		return u.Message(false, "Invalid table!")
 	}
@@ -76,7 +80,8 @@ func (qry *Query) CustomQry() map[string]interface{} {
 		response["requests"] = requests
 	case "yards":
 		response["yards"] = yards
-
+	case "shippinglines":
+		response["shippinglines"] = shippinglines
 	}
 
 	return response
