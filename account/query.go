@@ -5,6 +5,7 @@ import (
 	"time"
 
 	u "gollux/utils"
+	"zerasuite/yards"
 )
 
 type Query struct {
@@ -43,6 +44,7 @@ func (qry *Query) CustomQry() map[string]interface{} {
 	var trans []Transaction
 	var admins []Administrator
 	var requests []Request
+	var yards []yards.Yard
 	var errdb error
 	var response map[string]interface{}
 	fmt.Println(qry.Query)
@@ -54,6 +56,8 @@ func (qry *Query) CustomQry() map[string]interface{} {
 		_, errdb = DBM.Query(&admins, qry.Query)
 	} else if qry.Table == "requests" {
 		_, errdb = DBM.Query(&requests, qry.Query)
+	} else if qry.Table == "yards" {
+		_, errdb = DBM.Query(&yards, qry.Query)
 	} else {
 		return u.Message(false, "Invalid table!")
 	}
@@ -70,6 +74,9 @@ func (qry *Query) CustomQry() map[string]interface{} {
 		response["administrators"] = admins
 	case "requests":
 		response["requests"] = requests
+	case "yards":
+		response["yards"] = yards
+
 	}
 
 	return response
@@ -82,7 +89,7 @@ func (qry *Query) AccountUpdate() map[string]interface{} {
 	if errdb != nil {
 		return u.Message(false, errdb.Error())
 	}
-	fmt.Println(res.RowsReturned())
+	fmt.Println(res.Model())
 	if res.RowsAffected() == 0 {
 		return u.Message(false, "No rows affected!")
 	}

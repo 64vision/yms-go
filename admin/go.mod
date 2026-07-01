@@ -23,6 +23,7 @@ require (
 	gollux/sms v0.0.0-00010101000000-000000000000 // indirect
 	gollux/utils v0.0.0-00010101000000-000000000000 // indirect
 	mellium.im/sasl v0.3.2 // indirect
+	zerasuite/yards v0.0.0-00010101000000-000000000000 // indirect
 )
 
 replace gollux/auth => ../auth
@@ -40,3 +41,5 @@ replace gollux/sms => ../sms
 replace gollux/tools => ../tools
 
 replace gollux/email => ../email
+
+replace zerasuite/yards => ../yards
