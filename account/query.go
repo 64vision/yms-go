@@ -39,6 +39,14 @@ type Settlement struct {
 	Status        string    `json:"status"`
 	Remarks       string    `json:"remarks"`
 }
+type Setting struct {
+	ID     int    `json:"id"`
+	Name   string `json:"name"`
+	Key    string `json:"key"`
+	Value  string `json:"value"`
+	Type   string `json:"type"`
+	Status string `json:"status"`
+}
 
 func (qry *Query) CustomQry() map[string]interface{} {
 	var account []Account
@@ -47,6 +55,7 @@ func (qry *Query) CustomQry() map[string]interface{} {
 	var requests []Request
 	var yards []yards.Yard
 	var shippinglines []shippinglines.ShippingLine
+	var settings []Setting
 	var errdb error
 	var response map[string]interface{}
 	fmt.Println(qry.Query)
@@ -62,6 +71,8 @@ func (qry *Query) CustomQry() map[string]interface{} {
 		_, errdb = DBM.Query(&yards, qry.Query)
 	} else if qry.Table == "shippinglines" {
 		_, errdb = DBM.Query(&shippinglines, qry.Query)
+	} else if qry.Table == "settings" {
+		_, errdb = DBM.Query(&settings, qry.Query)
 	} else {
 		return u.Message(false, "Invalid table!")
 	}
@@ -82,6 +93,8 @@ func (qry *Query) CustomQry() map[string]interface{} {
 		response["yards"] = yards
 	case "shippinglines":
 		response["shippinglines"] = shippinglines
+	case "settings":
+		response["settings"] = settings
 	}
 
 	return response
