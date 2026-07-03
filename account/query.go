@@ -81,6 +81,7 @@ func (qry *Query) CustomQry() map[string]interface{} {
 		return u.Message(false, "Invalid table!")
 	}
 	if errdb != nil {
+		panic(errdb)
 		return u.Message(false, errdb.Error())
 	}
 	response = u.Message(true, "Result")
@@ -111,6 +112,7 @@ func (qry *Query) AccountUpdate() map[string]interface{} {
 	fmt.Println("AccountUpdate")
 	res, errdb := DBM.Exec(qry.Query)
 	if errdb != nil {
+		panic(errdb)
 		return u.Message(false, errdb.Error())
 	}
 	fmt.Println(res.Model())

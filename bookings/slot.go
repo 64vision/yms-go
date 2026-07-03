@@ -1,25 +1,26 @@
 package bookings
 
 import (
+	"encoding/json"
 	u "gollux/utils"
 	"time"
 )
 
 type BookingSlot struct {
-	ID          int       `json:"id"`
-	BookingDate string    `json:"booking_date"`
-	Slots       []Slot    `pg:",array" json:"slots"`
-	Status      string    `json:"status"`
-	YardID      int       `json:"yard_id"`
-	CreatedAt   time.Time `json:"created_at"`
-	CreatedBy   string    `json:"created_by"`
-	Type        string    `json:"type"`
+	ID          int             `json:"id"`
+	BookingDate string          `json:"booking_date"`
+	Slots       json.RawMessage `pg:"slots" json:"slots"`
+	Status      string          `json:"status"`
+	YardID      int             `json:"yard_id"`
+	CreatedAt   time.Time       `json:"created_at"`
+	CreatedBy   string          `json:"created_by"`
+	Type        string          `json:"type"`
 }
 type Slot struct {
-	Time       string   `json:"time"`
-	Capacity   int      `json:"capacity"`
-	Status     string   `json:"status"`
-	BookingIds []string `json:"booking_ids"`
+	Time     string `json:"time"`
+	Capacity int    `json:"capacity"`
+	Booked   int    `json:"booked"`
+	Status   string `json:"status"`
 }
 
 func (bs *BookingSlot) OpenBookingDate() map[string]interface{} {
