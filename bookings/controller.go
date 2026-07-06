@@ -6,18 +6,18 @@ import (
 	"net/http"
 )
 
-func OpenDate(w http.ResponseWriter, r *http.Request) {
+func NewBooking_use(w http.ResponseWriter, r *http.Request) {
 	(w).Header().Set("Access-Control-Allow-Origin", "*")
-	slot := &BookingSlot{}
+	entry := &Booking{}
 	var resp map[string]interface{}
-	err := json.NewDecoder(r.Body).Decode(slot) //decode the request body into struct and failed if any error occur
+	err := json.NewDecoder(r.Body).Decode(entry) //decode the request body into struct and failed if any error occur
 	if err != nil {
 		//panic(err)
 		u.Respond(w, u.Message(false, "Invalid request"))
 		return
 	}
 
-	slot.CreatedBy = r.Context().Value("user").(string)
-	resp = slot.OpenBookingDate()
+	entry.ClientID = r.Context().Value("user").(int)
+	resp = entry.AddBooking()
 	u.Respond(w, resp)
 }

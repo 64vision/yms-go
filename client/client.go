@@ -30,13 +30,16 @@ func main() {
 	router.HandleFunc("/account/resendcode", account.ResendCode).Methods("POST")
 	router.HandleFunc("/account/forgot", account.ForgotPassword).Methods("POST")
 	router.HandleFunc("/account/balance", account.BalanceInquire).Methods("POST")
-	router.HandleFunc("/account/qry", account.PlayerCustomQry).Methods("POST")
+	router.HandleFunc("/account/qry", account.CustomQry).Methods("POST")
 	router.HandleFunc("/credits/buy", account.DoBuyCredits).Methods("POST")
 	router.HandleFunc("/credits/cashout", account.DoCashout).Methods("POST")
 	router.HandleFunc("/credits/cashout_cancel", account.UpdateCashout).Methods("POST")
 	router.HandleFunc("/credits/get_cashout", account.GetCashout).Methods("POST")
 	router.HandleFunc("/credits/callback", account.Callback).Methods("POST")
 	router.HandleFunc("/credits/maya_callback", account.MayaCallback).Methods("POST")
+
+	/*Booking path*/
+	router.HandleFunc("/booking/new", NewBooking).Methods("POST")
 
 	router.Use(auth.JwtAuthentication)
 

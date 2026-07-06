@@ -9,7 +9,6 @@ import (
 
 	"gollux/account"
 	"gollux/auth"
-	"zerasuite/bookings"
 
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
@@ -41,7 +40,6 @@ func main() {
 	router.HandleFunc("/credits/topup", account.AddRequest).Methods("POST")
 
 	//Bookings path
-	router.HandleFunc("/bookings/open_date", bookings.OpenDate).Methods("POST")
 
 	router.Use(auth.JwtAuthentication)
 

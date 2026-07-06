@@ -39,14 +39,14 @@ func (bs *BookingSlot) OpenBookingDate() map[string]interface{} {
 }
 
 func (bs *BookingSlot) ValidateBookingDate() string {
-	var slot BookingSlot
-	_, err := DBM.Query(&slot, `SELECT * FROM booking_slots where booking_date=?`, bs.BookingDate)
+	var slot Slot
+	res, err := DBM.Query(&slot, `SELECT * FROM booking_slots where booking_date=?`, bs.BookingDate)
 	if err != nil {
 		panic(err)
 		return err.Error()
 	}
-	if slot.ID == 0 {
-		return "Available"
+	if res.RowsReturned() == 0 {
+		return "Slot Not found!"
 	}
 	return "Already Exist"
 }
