@@ -99,6 +99,12 @@ type MayaRes struct {
 	Timestamp       time.Time `json:"timestamp"`
 }
 
+type PaymentEnabledResponse struct {
+	Success bool            `json:"success"`
+	Data    json.RawMessage `json:"data"`
+	Error   string          `json:"error"` // or *string if it's always a string/null
+}
+
 type PaymentResponse struct {
 	Success bool        `json:"success"`
 	Data    PaymentData `json:"data"`
@@ -140,18 +146,22 @@ const (
 	MAYACLIENTSECRETE  = "JQPFSDH4YfO7bQfG3Py8DN3jGO48acn0Gaz9cnQtbT4SMGGuXnDyEbtgzPjmrwWx"
 	MAYACLIENTID       = "872cd1f8-b8cf-4eff-a829-8055c727e93a"
 	GATEWAYHUBKEY      = "Bearer wfdamjIHKlHblMubhAswwSdKE7nTIGXM8SB9wvbzwq5JFviqYZJDaeaGfv6yCnGF"
+	GETEWAYENDPOINT    = "https://gatewayhub.io"
 )
 
 var DoBuyCredits = func(w http.ResponseWriter, r *http.Request) {
 	(w).Header().Set("Access-Control-Allow-Origin", "*")
+	fmt.Println("DoBuy Credits")
 	data := &BuyCredit{}
 	err := json.NewDecoder(r.Body).Decode(data) //decode the request body into struct and failed if any error occu
 	if err != nil {
+		panic(err)
 		u.Respond(w, u.Message(false, "Invalid request"))
 		return
 	}
+	fmt.Println("DoBuy Credits pass")
 	data.UserID = r.Context().Value("user").(int)
-	fmt.Println(data)
+	fmt.Println(data.Partner)
 	resp := data.Buy()
 	u.Respond(w, resp)
 }
@@ -271,6 +281,7 @@ func (buy *BuyCredit) Buy() map[string]interface{} {
 		return u.Message(false, "Failed")
 	}
 	var payRes map[string]interface{}
+	fmt.Println(buy.Partner)
 	if buy.Partner == "MAYA" {
 		_amount := fmt.Sprintf("%f", buy.ReqAmount)
 		fmt.Println("maya amount", _amount)
@@ -454,7 +465,7 @@ func GatewayHubCreateOrder(merchantTransId string, amount float64, gateway strin
 
 	jsonStr := strings.NewReader(jsonData)
 	client := &http.Client{}
-	req, _ := http.NewRequest("POST", URL, jsonStr)
+	req, _ := http.NewRequest("POST", GETEWAYENDPOINT+"/api/payments", jsonStr)
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Authorization", GATEWAYHUBKEY)
 	// Make HTTP POST request and return message SID
@@ -481,6 +492,61 @@ func GatewayHubCreateOrder(merchantTransId string, amount float64, gateway strin
 	fmt.Println("Response Body as String:", responseString)
 	fmt.Println("------")
 	var data PaymentResponse
+	fmt.Println(resp.Body)
+	// Decode the response body into a struct
+
+	errr := json.Unmarshal(_body, &data)
+	if errr != nil {
+		fmt.Println("Error decoding response body:", errr)
+
+	}
+
+	// Now you can work with the decoded struct
+	fmt.Println(data.Success)
+	if resp.StatusCode >= 200 && resp.StatusCode < 300 {
+
+		if !data.Success {
+			fmt.Println("pass pause")
+			return u.Message(false, data.Error)
+		}
+
+		response = u.Message(true, "OK")
+		response["response"] = data
+		return response
+	}
+	return response
+}
+
+func GatewayEnabled() map[string]interface{} {
+
+	client := &http.Client{}
+	req, _ := http.NewRequest("GET", GETEWAYENDPOINT+"/api/gateways/enabled", nil)
+	req.Header.Set("Accept", "application/json")
+	req.Header.Set("Authorization", GATEWAYHUBKEY)
+	// Make HTTP POST request and return message SID
+	response := u.Message(true, "Successful")
+	resp, errb := client.Do(req)
+
+	if errb != nil {
+		fmt.Println("Error:", errb)
+
+	}
+	defer resp.Body.Close()
+
+	// Read the response body and convert it to a string
+	_body, errc := ioutil.ReadAll(resp.Body)
+	if errc != nil {
+		fmt.Println("Error reading response body:", errc)
+
+	}
+
+	// Convert the response body to a string
+	responseString := string(_body)
+
+	fmt.Println("HTTP Status Code:", resp.Status)
+	fmt.Println("Response Body as String:", responseString)
+	fmt.Println("------")
+	var data PaymentEnabledResponse
 	fmt.Println(resp.Body)
 	// Decode the response body into a struct
 

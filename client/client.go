@@ -31,6 +31,7 @@ func main() {
 	router.HandleFunc("/account/forgot", account.ForgotPassword).Methods("POST")
 	router.HandleFunc("/account/balance", account.BalanceInquire).Methods("POST")
 	router.HandleFunc("/account/qry", account.CustomQry).Methods("POST")
+	router.HandleFunc("/account/gateways", account.GetGatewayEnabled).Methods("GET")
 	router.HandleFunc("/credits/buy", account.DoBuyCredits).Methods("POST")
 	router.HandleFunc("/credits/cashout", account.DoCashout).Methods("POST")
 	router.HandleFunc("/credits/cashout_cancel", account.UpdateCashout).Methods("POST")

@@ -43,9 +43,9 @@ func ProceedRequest(w http.ResponseWriter, r *http.Request) {
 	u.Respond(w, resp)
 }
 
-func PlayerStats(w http.ResponseWriter, r *http.Request) {
+func GetGatewayEnabled(w http.ResponseWriter, r *http.Request) {
 	(w).Header().Set("Access-Control-Allow-Origin", "*")
-	resp := AccountStats()
+	resp := GatewayEnabled()
 	u.Respond(w, resp)
 }
 

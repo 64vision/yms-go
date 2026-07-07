@@ -7,6 +7,7 @@ require (
 	github.com/rs/cors v1.11.1
 	gollux/account v0.0.0-00010101000000-000000000000
 	gollux/auth v0.0.0-00010101000000-000000000000
+	gollux/utils v0.0.0-00010101000000-000000000000
 	zerasuite/bookings v0.0.0-00010101000000-000000000000
 )
 
@@ -19,9 +20,9 @@ require (
 	github.com/kr/pretty v0.3.1 // indirect
 	github.com/nxadm/tail v1.4.11 // indirect
 	golang.org/x/crypto v0.53.0 // indirect
+	gollux/dbconfig v0.0.0-00010101000000-000000000000 // indirect
 	gollux/email v0.0.0-00010101000000-000000000000 // indirect
 	gollux/sms v0.0.0-00010101000000-000000000000 // indirect
-	gollux/utils v0.0.0-00010101000000-000000000000 // indirect
 	mellium.im/sasl v0.3.2 // indirect
 	zerasuite/shippinglines v0.0.0-00010101000000-000000000000 // indirect
 	zerasuite/yards v0.0.0-00010101000000-000000000000 // indirect
@@ -42,3 +43,5 @@ replace zerasuite/shippinglines => ../shippinglines
 replace zerasuite/bookings => ../bookings
 
 replace zerasuite/yards => ../yards
+
+replace gollux/dbconfig => ../dbconfig
