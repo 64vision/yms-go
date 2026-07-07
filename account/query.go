@@ -58,6 +58,7 @@ func (qry *Query) CustomQry() map[string]interface{} {
 	var shippinglines []shippinglines.ShippingLine
 	var settings []Setting
 	var bookingslots []bookings.BookingSlot
+	var bookings []bookings.Booking
 	var errdb error
 	var response map[string]interface{}
 	fmt.Println(qry.Query)
@@ -77,6 +78,8 @@ func (qry *Query) CustomQry() map[string]interface{} {
 		_, errdb = DBM.Query(&settings, qry.Query)
 	} else if qry.Table == "bookingslots" {
 		_, errdb = DBM.Query(&bookingslots, qry.Query)
+	} else if qry.Table == "bookings" {
+		_, errdb = DBM.Query(&bookings, qry.Query)
 	} else {
 		return u.Message(false, "Invalid table!")
 	}
@@ -102,6 +105,8 @@ func (qry *Query) CustomQry() map[string]interface{} {
 		response["settings"] = settings
 	case "bookingslots":
 		response["bookingslots"] = bookingslots
+	case "bookings":
+		response["bookings"] = bookings
 	}
 
 	return response
@@ -112,7 +117,7 @@ func (qry *Query) AccountUpdate() map[string]interface{} {
 	fmt.Println("AccountUpdate")
 	res, errdb := DBM.Exec(qry.Query)
 	if errdb != nil {
-		panic(errdb)
+		//panic(errdb)
 		return u.Message(false, errdb.Error())
 	}
 	fmt.Println(res.Model())

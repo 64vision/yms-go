@@ -19,6 +19,7 @@ type Booking struct {
 	ClientID      int         `json:"client_id"`
 	ClientName    string      `json:"client_name"`
 	ContainerType string      `json:"container_type"`
+	ContainerLoad string      `json:"container_load"`
 	ContainerSize string      `json:"container_size"`
 	Truck         interface{} `json:"truck"`
 	Affiliation   string      `json:"affiliation"`
@@ -36,8 +37,8 @@ func (b *Booking) AddBooking() map[string]interface{} {
 	if b.ValidateBookingDate() != "Available" {
 		return u.Message(false, "Slot is not available or already full!")
 	}
-	b.Status = "Initiated"
-	b.PaymentStatus = "Pending Payment"
+	b.Status = "Active"
+	b.PaymentStatus = "Credits"
 	b.CreatedAt = time.Now()
 	_, errdb := DBM.Model(b).Insert()
 	if errdb != nil {

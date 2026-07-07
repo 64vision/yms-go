@@ -55,6 +55,7 @@ type BuyCreditList struct {
 	Partner     string     `json:"partner"`
 	Amount      float64    `json:"amount"`
 	ReqAmount   float64    `json:"req_amount"`
+	Gateway     string     `json:"gateway"`
 }
 type BuyCredit struct {
 	ID          int        `json:"id"`
