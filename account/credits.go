@@ -67,6 +67,7 @@ type BuyCredit struct {
 	Partner     string     `json:"partner"`
 	Amount      float64    `json:"amount"`
 	ReqAmount   float64    `json:"req_amount"`
+	Gateway     string     `json:"gateway"`
 }
 type CreditsReq struct {
 	Name            string      `json:"name"`
@@ -98,6 +99,32 @@ type MayaRes struct {
 	Timestamp       time.Time `json:"timestamp"`
 }
 
+type PaymentResponse struct {
+	Success bool        `json:"success"`
+	Data    PaymentData `json:"data"`
+	Error   string      `json:"error"` // or *string if it's always a string/null
+}
+
+type PaymentData struct {
+	PaymentID     string    `json:"payment_id"`
+	TransactionID string    `json:"transaction_id"`
+	Gateway       string    `json:"gateway"`
+	Amount        float64   `json:"amount"`
+	Currency      string    `json:"currency"`
+	Status        string    `json:"status"`
+	QRData        string    `json:"qr_data"`
+	ExpiresAt     time.Time `json:"expires_at"`
+	RedirectURL   *string   `json:"redirect_url"`
+	CheckoutURL   *string   `json:"checkout_url"`
+	Merchant      Merchant  `json:"merchant"`
+}
+
+type Merchant struct {
+	Name       string `json:"name"`
+	Logo       string `json:"logo"`
+	ThemeColor string `json:"theme_color"`
+}
+
 // GCASH
 const (
 	URL                = "https://payment-master-v1.surepay-prod.com/create_order"
@@ -112,6 +139,7 @@ const (
 	MAYAURLCALBACK     = "https://acct.servehpbr.com/credits/maya_callback"
 	MAYACLIENTSECRETE  = "JQPFSDH4YfO7bQfG3Py8DN3jGO48acn0Gaz9cnQtbT4SMGGuXnDyEbtgzPjmrwWx"
 	MAYACLIENTID       = "872cd1f8-b8cf-4eff-a829-8055c727e93a"
+	GATEWAYHUBKEY      = "Bearer wfdamjIHKlHblMubhAswwSdKE7nTIGXM8SB9wvbzwq5JFviqYZJDaeaGfv6yCnGF"
 )
 
 var DoBuyCredits = func(w http.ResponseWriter, r *http.Request) {
@@ -229,7 +257,7 @@ func processCredits(transaction_code string) {
 }
 
 func (buy *BuyCredit) Buy() map[string]interface{} {
-	merchantTransId := "shbr" + strconv.Itoa(buy.UserID) + "-" + genTransCode()
+	merchantTransId := u.GenCharCode(4) + "-" + strconv.Itoa(buy.UserID) + "-" + genTransCode()
 	//account := GetUserMeta(buy.UserID)
 	buy.Amount = buy.ReqAmount
 	buy.TransID = merchantTransId
@@ -250,6 +278,8 @@ func (buy *BuyCredit) Buy() map[string]interface{} {
 		payRes = MayaCreateOrder(merchantTransId, _amount, acct.FirstName, acct.LastName, "64marbles@gmail.com")
 	} else if buy.Partner == "GCASH" {
 		payRes = GcashCreateOrder(merchantTransId, buy.ReqAmount)
+	} else if buy.Partner == "GATEWAYHUB" {
+		payRes = GatewayHubCreateOrder(merchantTransId, buy.ReqAmount, buy.Gateway)
 	}
 	return payRes
 }
@@ -406,6 +436,69 @@ func GcashCreateOrder(merchantTransId string, amount float64) map[string]interfa
 			return u.Message(false, data.Message)
 		}
 		fmt.Println("pass here2")
+		response = u.Message(true, "OK")
+		response["response"] = data
+		return response
+	}
+	return response
+}
+
+func GatewayHubCreateOrder(merchantTransId string, amount float64, gateway string) map[string]interface{} {
+	strAmount := strconv.FormatFloat(amount, 'f', -1, 64)
+	var jsonData = `{
+			"amount": ` + strAmount + `,
+			"currency": "PHP",
+			"gateway": "` + gateway + `",
+			"reference": "` + merchantTransId + `"
+			}`
+
+	jsonStr := strings.NewReader(jsonData)
+	client := &http.Client{}
+	req, _ := http.NewRequest("POST", URL, jsonStr)
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Authorization", GATEWAYHUBKEY)
+	// Make HTTP POST request and return message SID
+	response := u.Message(true, "Successful")
+	resp, errb := client.Do(req)
+
+	if errb != nil {
+		fmt.Println("Error:", errb)
+
+	}
+	defer resp.Body.Close()
+
+	// Read the response body and convert it to a string
+	_body, errc := ioutil.ReadAll(resp.Body)
+	if errc != nil {
+		fmt.Println("Error reading response body:", errc)
+
+	}
+
+	// Convert the response body to a string
+	responseString := string(_body)
+
+	fmt.Println("HTTP Status Code:", resp.Status)
+	fmt.Println("Response Body as String:", responseString)
+	fmt.Println("------")
+	var data PaymentResponse
+	fmt.Println(resp.Body)
+	// Decode the response body into a struct
+
+	errr := json.Unmarshal(_body, &data)
+	if errr != nil {
+		fmt.Println("Error decoding response body:", errr)
+
+	}
+
+	// Now you can work with the decoded struct
+	fmt.Println(data.Success)
+	if resp.StatusCode >= 200 && resp.StatusCode < 300 {
+
+		if !data.Success {
+			fmt.Println("pass pause")
+			return u.Message(false, data.Error)
+		}
+
 		response = u.Message(true, "OK")
 		response["response"] = data
 		return response
