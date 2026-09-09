@@ -31,6 +31,9 @@ type Booking struct {
 	DocsFee       float64     `json:"docs_fee"`
 	ServiceFee    float64     `json:"service_fee"`
 	PaymentStatus string      `json:"payment_status"`
+	DailyRate     float64     `json:"daily_rate"`
+	Slot          string      `json:"slot"`
+	Index         string      `json:"index"`
 }
 
 func (b *Booking) AddBooking() map[string]interface{} {
