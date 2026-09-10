@@ -2,6 +2,7 @@ package account
 
 import (
 	"fmt"
+	"strconv"
 	"time"
 
 	"gollux/sms"
@@ -54,10 +55,14 @@ const (
 )
 
 func (req *Request) NewTopUp() map[string]interface{} {
-
-	receiver, _ := GetAccountByMobile(req.Receiver)
+	accountID, err := strconv.Atoi(req.Receiver)
+	if err != nil {
+		fmt.Println("Invalid number:", err)
+		return u.Message(false, err.Error())
+	}
+	receiver, _ := GetAccountByID(accountID)
 	if receiver.ID == 0 {
-		return u.Message(false, "Mobile no. is not yet registered.")
+		return u.Message(false, "ID not found!.")
 	}
 	req.ReqAt = time.Now()
 	req.Status = "OK"
@@ -72,10 +77,10 @@ func (req *Request) NewTopUp() map[string]interface{} {
 		receiverTrans.Amount = req.Amount
 		receiverTrans.AccountID = receiver.ID
 		receiverTrans.Type = req.Type
-		receiverTrans.Description = "Received Credits from  Blazing Sphere"
+		receiverTrans.Description = req.Message
 		receiverTrans.Remarks = req.Type
 		receiverTrans.Create()
-		sms.Send(req.Receiver, req.Message)
+		//sms.Send(req.Receiver, req.Message)
 	}
 	resp := u.Message(true, "Successful!")
 	resp["requested"] = req

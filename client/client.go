@@ -41,6 +41,8 @@ func main() {
 
 	/*Booking path*/
 	router.HandleFunc("/booking/new", NewBooking).Methods("POST")
+	router.HandleFunc("/booking/view", ViewBooking).Methods("POST")
+	router.HandleFunc("/container/withdraw", WithdrawContainer).Methods("POST")
 
 	router.Use(auth.JwtAuthentication)
 
