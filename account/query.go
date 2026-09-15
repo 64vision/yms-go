@@ -1,6 +1,7 @@
 package account
 
 import (
+	"encoding/json"
 	"fmt"
 	"time"
 
@@ -15,6 +16,10 @@ type Query struct {
 	Query     string `json:"query"`
 	Type      string `json:"type"`
 	AccountID int    `json:"account_id"`
+}
+
+type Item struct {
+	Data json.RawMessage `json:"data"`
 }
 
 type AgentSale struct {
@@ -57,8 +62,10 @@ func (qry *Query) CustomQry() map[string]interface{} {
 	var yards []yards.Yard
 	var shippinglines []shippinglines.ShippingLine
 	var settings []Setting
+	var pricelists []bookings.PriceList
 	var bookingslots []bookings.BookingSlot
 	var bookings []bookings.Booking
+
 	var errdb error
 	var response map[string]interface{}
 	fmt.Println(qry.Query)
@@ -80,6 +87,8 @@ func (qry *Query) CustomQry() map[string]interface{} {
 		_, errdb = DBM.Query(&bookingslots, qry.Query)
 	} else if qry.Table == "bookings" {
 		_, errdb = DBM.Query(&bookings, qry.Query)
+	} else if qry.Table == "pricelists" {
+		_, errdb = DBM.Query(&pricelists, qry.Query)
 	} else {
 		return u.Message(false, "Invalid table!")
 	}
@@ -107,6 +116,8 @@ func (qry *Query) CustomQry() map[string]interface{} {
 		response["bookingslots"] = bookingslots
 	case "bookings":
 		response["bookings"] = bookings
+	case "pricelists":
+		response["pricelists"] = pricelists
 	}
 
 	return response
@@ -114,10 +125,10 @@ func (qry *Query) CustomQry() map[string]interface{} {
 }
 
 func (qry *Query) AccountUpdate() map[string]interface{} {
-	fmt.Println("AccountUpdate")
+	fmt.Println(qry.Query)
 	res, errdb := DBM.Exec(qry.Query)
 	if errdb != nil {
-		//panic(errdb)
+		panic(errdb)
 		return u.Message(false, errdb.Error())
 	}
 	fmt.Println(res.Model())
@@ -130,6 +141,26 @@ func (qry *Query) AccountUpdate() map[string]interface{} {
 
 }
 
+func (qry *Query) ExecQuery() map[string]interface{} {
+	fmt.Println("ExecQuery", qry.Query)
+	response := u.Message(true, "Result")
+	var results Item
+	_, err := DBM.Query(&results, `SELECT json_agg(t) as data
+							FROM (
+								`+qry.Query+`
+							) t;`)
+	if err != nil {
+		//panic(err)
+		return u.Message(false, err.Error())
+	}
+	if len(results.Data) == 0 {
+		return u.Message(false, "No rows found!")
+	}
+	response = u.Message(true, "Ok!")
+	response["results"] = results.Data
+	return response
+
+}
 func AccountStats() map[string]interface{} {
 	var accounts []Account
 	var topplayers []map[string]interface{}

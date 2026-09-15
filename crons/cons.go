@@ -34,7 +34,7 @@ func main() {
 
 	cSettle := cron.New()
 
-	err := cSales.AddFunc("0 1 * * *", genSales) // Every day at 1 AM
+	err := cSales.AddFunc("0 * * * *", genSales) // Every hour at minute 0
 	if err != nil {
 		fmt.Println("Error scheduling task:", err)
 		return
@@ -47,7 +47,7 @@ func main() {
 		return
 	}
 	cSales.Start()
-	fmt.Println("Agent Sales generation. Running every day at 1 AM.")
+	fmt.Println("Agent Sales generation. Running every hour.")
 	cSettle.Start()
 	fmt.Println("Settlement generation. Running every Saturday at 1:30 AM.")
 

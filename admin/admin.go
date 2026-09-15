@@ -6,10 +6,13 @@ import (
 	"math/rand"
 	"net/http"
 	"time"
+	"zerasuite/bookings"
 
 	"gollux/account"
 	"gollux/auth"
+	"gollux/dbconfig"
 
+	"github.com/go-pg/pg"
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
 )
@@ -18,15 +21,18 @@ const (
 	PORT = "9900"
 )
 
+var DBM *pg.DB
+
 func main() {
 	fmt.Println("Starting administration")
+	DBM = dbconfig.DBM
 	router := mux.NewRouter()
 	router.HandleFunc("/admin/login", account.AdminLogin).Methods("POST")
 
 	//
 
 	router.HandleFunc("/admin/qry", account.CustomQry).Methods("POST")
-
+	router.HandleFunc("/exec/qry", account.ExecCustomQry).Methods("POST")
 	// router.HandleFunc("/admin/player_stats", account.PlayerStats).Methods("GET")
 	// router.HandleFunc("/admin/settlements", account.GetSettlements).Methods("POST")
 	// router.HandleFunc("/admin/acct_settlement", account.GetAccountSettlement).Methods("POST")
@@ -54,11 +60,55 @@ func main() {
 	handler = c.Handler(handler)
 	rand.Seed(time.Now().UnixNano())
 	//sms.Send("09156033392", "test")
-	//go BuyingTicker()
+	go RunTicker()
 	/*--------------------------------------------------
 		Run Server
 	-----------------------------------------------------*/
 	fmt.Println("HYPERBALL server run at port: " + PORT)
 	// Bind to a port and pass our router in
 	log.Fatal(http.ListenAndServe(":"+PORT, handler))
+}
+
+func RunTicker() {
+	ticker := time.NewTicker(15 * time.Minute)
+	go func() {
+		for {
+			select {
+			case t := <-ticker.C:
+				fmt.Println("Tick at", t)
+				NoShow()
+
+			}
+		}
+	}()
+}
+
+// run no show
+func NoShow() {
+	fmt.Println("Running no show filter")
+	var bookings []bookings.Booking
+	res, err := DBM.Query(&bookings, `UPDATE bookings
+SET status = 'Forfeited', remarks='No Show'
+WHERE withdraw_slot_id IS NULL
+  AND status = 'Active'
+  AND (booking_date::date + slot_time::time)
+      <= NOW() - INTERVAL '1 hour'
+RETURNING *`)
+	if err != nil {
+		panic(err)
+	}
+	if res.RowsReturned() == 0 {
+		return
+	}
+	for _, booking := range bookings {
+		trans := &account.Transaction{}
+		trans.Type = "refund"
+		trans.AccountID = booking.ClientID
+		trans.Amount = booking.DocsFee
+		trans.CreatedAt = time.Now()
+		trans.RefNo = booking.ID
+		trans.Description = "Docs fee refund for forfeited no show booking. Ref ID: " + fmt.Sprint(booking.ID)
+		trans.Add()
+	}
+
 }

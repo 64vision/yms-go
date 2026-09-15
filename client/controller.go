@@ -44,6 +44,35 @@ func WithdrawContainer(w http.ResponseWriter, r *http.Request) {
 	u.Respond(w, resp)
 }
 
+func CancelBooking(w http.ResponseWriter, r *http.Request) {
+	(w).Header().Set("Access-Control-Allow-Origin", "*")
+	entry := &bookings.Booking{}
+	var resp map[string]interface{}
+	err := json.NewDecoder(r.Body).Decode(entry) //decode the request body into struct and failed if any error occur
+	if err != nil {
+		//panic(err)
+		u.Respond(w, u.Message(false, "Invalid request"))
+		return
+	}
+
+	entry.ClientID = r.Context().Value("user").(int)
+
+	resp = entry.Cancel()
+	//refund docs fee
+	if resp["status"].(bool) {
+		fmt.Println("Booking Status", resp["status"].(bool))
+		trans := &account.Transaction{}
+		trans.Type = "refund"
+		trans.AccountID = entry.ClientID
+		trans.Amount = entry.DocsFee
+		trans.CreatedAt = time.Now()
+		trans.RefNo = entry.ID
+		trans.Description = "Docs fee refund for cancelled booking. Ref ID: " + fmt.Sprint(entry.ID)
+		trans.Add()
+
+	}
+	u.Respond(w, resp)
+}
 func NewBooking(w http.ResponseWriter, r *http.Request) {
 	(w).Header().Set("Access-Control-Allow-Origin", "*")
 	entry := &bookings.Booking{}

@@ -16,13 +16,11 @@ require (
 )
 
 require (
-	github.com/google/go-cmp v0.7.0 // indirect
+	github.com/fsnotify/fsnotify v1.4.9 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
-	github.com/kr/pretty v0.2.1 // indirect
-	github.com/nxadm/tail v1.4.8 // indirect
-	go.yaml.in/yaml/v3 v3.0.4 // indirect
+	github.com/kr/text v0.1.0 // indirect
 	golang.org/x/crypto v0.53.0 // indirect
-	golang.org/x/net v0.56.0 // indirect
+	gopkg.in/tomb.v1 v1.0.0-20141024135613-dd632973f1e7 // indirect
 	mellium.im/sasl v0.3.2 // indirect
 )
 

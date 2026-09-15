@@ -6,6 +6,17 @@ import (
 	"time"
 )
 
+type PriceList struct {
+	ID            int     `json:"id"`
+	Name          string  `json:"name"`
+	Description   string  `json:"description"`
+	Booking       float64 `json:"booking"`
+	DocsTwenty    float64 `pg:"docs_twenty" json:"docs_twenty"`
+	DocsForty     float64 `json:"docs_forty"`
+	StorageTwenty float64 `json:"storage_twenty"`
+	StorageForty  float64 `json:"storage_forty"`
+	Status        string  `json:"status"`
+}
 type BookingSlot struct {
 	ID          int             `json:"id"`
 	BookingDate string          `json:"booking_date"`
@@ -17,10 +28,12 @@ type BookingSlot struct {
 	Type        string          `json:"type"`
 }
 type Slot struct {
-	Time     string `json:"time"`
-	Capacity int    `json:"capacity"`
-	Booked   int    `json:"booked"`
-	Status   string `json:"status"`
+	Time           string `json:"time"`
+	Withdraw       int    `json:"withdraw"`
+	Drop           int    `json:"Drop "`
+	BookedDrop     int    `json:"booked_drop"`
+	BookedWithdraw int    `json:"booked_withdraw"`
+	Status         string `json:"status"`
 }
 
 func (bs *BookingSlot) OpenBookingDate() map[string]interface{} {

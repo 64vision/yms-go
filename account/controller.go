@@ -124,10 +124,19 @@ func CustomQry(w http.ResponseWriter, r *http.Request) {
 	u.Respond(w, resp)
 }
 
-func Test(name string) string {
-	// Return a greeting that embeds the name in a message.
-	message := fmt.Sprintf("Hi, %v. Register modoule!", name)
-	return message
+func ExecCustomQry(w http.ResponseWriter, r *http.Request) {
+	(w).Header().Set("Access-Control-Allow-Origin", "*")
+	qry := &Query{}
+	var resp map[string]interface{}
+	err := json.NewDecoder(r.Body).Decode(qry) //decode the request body into struct and failed if any error occur
+	if err != nil {
+		//panic(err)
+		u.Respond(w, u.Message(false, "Invalid request"))
+		return
+	}
+	resp = qry.ExecQuery()
+
+	u.Respond(w, resp)
 }
 func GetPlayersLocation(w http.ResponseWriter, r *http.Request) {
 	(w).Header().Set("Access-Control-Allow-Origin", "*")
