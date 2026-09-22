@@ -18,7 +18,7 @@ import (
 )
 
 const (
-	PORT = "9900"
+	PORT = "9900" //9900-msk
 )
 
 var DBM *pg.DB
@@ -89,10 +89,10 @@ func NoShow() {
 	var bookings []bookings.Booking
 	res, err := DBM.Query(&bookings, `UPDATE bookings
 SET status = 'Forfeited', remarks='No Show'
-WHERE withdraw_slot_id IS NULL
+WHERE remarks IS NULL
   AND status = 'Active'
   AND (booking_date::date + slot_time::time)
-      <= NOW() - INTERVAL '1 hour'
+      <= NOW() - INTERVAL '2 hour'
 RETURNING *`)
 	if err != nil {
 		panic(err)

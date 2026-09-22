@@ -259,7 +259,7 @@ func (b *Booking) ValidateBookingDate() string {
 	fmt.Println("SlotID", b.SlotID)
 	fmt.Println("SlotTime", b.SlotTime)
 	var slot Slot
-	res, err := DBM.Query(&slot, `SELECT  slot->>'time' as time, slot->>'status' as status, slot->>'drop' as drop, slot->>'booked_drop' as booked_drop
+	res, err := DBM.Query(&slot, `SELECT  slot->>'time' as time, slot->>'status' as status,  slot->>'capacity' as capacity, slot->>'booked_withdraw' as booked_withdraw, slot->>'booked_drop' as booked_drop
 FROM booking_slots,
 jsonb_array_elements(slots) AS slot
 WHERE id = ?
@@ -273,7 +273,7 @@ WHERE id = ?
 		return "Slot not found!"
 	}
 
-	if slot.BookedDrop >= slot.Drop {
+	if (slot.BookedDrop + slot.BookedWithdraw) >= slot.Capacity {
 		return "Slot is full!"
 	}
 	return "Available"

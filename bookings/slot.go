@@ -29,6 +29,7 @@ type BookingSlot struct {
 }
 type Slot struct {
 	Time           string `json:"time"`
+	Capacity       int    `json:"capacity"`
 	Withdraw       int    `json:"withdraw"`
 	Drop           int    `json:"Drop "`
 	BookedDrop     int    `json:"booked_drop"`

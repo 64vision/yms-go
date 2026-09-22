@@ -78,6 +78,7 @@ func OpenDB() {
 	CONFIG = CheckAndLoadConfigs()
 	os.Setenv("TZ", "Asia/Manila")
 	fmt.Println("----------------------\n Prod:  Initializing  database...")
+	fmt.Println("----------------------\n Db Name: ", CONFIG.Dbconfig.Database)
 	os.Setenv("TZ", "Asia/Manila")
 	DBM = pg.Connect(&pg.Options{
 		Addr:     CONFIG.Dbconfig.Addr,
