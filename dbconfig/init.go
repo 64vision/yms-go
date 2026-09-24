@@ -39,7 +39,7 @@ var CONFIG *Configuration
 
 var PRODCONFIGPATH = "/home/ubuntu/zera/config.json" //ubuntu service path
 
-var CONFIGPATH = "../config.json"
+var CONFIGPATH = "../configdev.json"
 
 func init() {
 	fmt.Println("----------------------\n Prod:  Initializing...")

@@ -1,0 +1,8 @@
+{
+     "dbconfig": {
+        "addr":     "localhost:5432",
+        "database": "yms_local_dev",
+        "user":     "postgres",
+        "password": "postgres"
+    }
+}
